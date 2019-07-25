@@ -58,7 +58,7 @@ class UserController extends Controller
         $user = User::find(Auth::user()->id);
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
-        $user->skills = $request->skills;
+        $user->skills = preg_replace('/[^A-Za-z0-9,]/', ',', $request->skills);
 
         //upload user proPic & resume if exist
         if($request->file('profile_picture') != ""){
