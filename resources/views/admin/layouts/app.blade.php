@@ -77,6 +77,14 @@
         </nav>
 
         <main class="py-4">
+            @if(Session::has('success'))
+                <div class="alert alert-success" id="success">
+                    {{Session::get('success')}}
+                    @php
+                    Session::forget('success');
+                    @endphp
+                </div>
+            @endif
             @yield('content')
         </main>
     </div>

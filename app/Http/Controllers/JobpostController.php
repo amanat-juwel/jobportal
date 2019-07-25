@@ -3,11 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator;
 use App\Jobpost;
+use Auth;
 
 class JobpostController extends Controller
-{
+{   
+    public function __construct()
+    {
+        $this->middleware('auth:admin');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +22,7 @@ class JobpostController extends Controller
     {
         $job_posts = Jobpost::orderBy('id')->get();
 
-        return $job_posts;
+        return view('admin.jobpost.index', compact('job_posts'));
     }
 
     /**
@@ -27,7 +32,7 @@ class JobpostController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.jobpost.create');
     }
 
     /**
@@ -38,7 +43,30 @@ class JobpostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'job_title' => 'required|string',
+            'job_description' => 'required|string',
+            'salary' => 'required|string',
+            'location' => 'required|string',
+            'country' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        //validation passed
+
+        $job_post = new Jobpost;
+        $job_post->job_title = $request->job_title;
+        $job_post->job_description = $request->job_description;
+        $job_post->salary = $request->salary;
+        $job_post->location = $request->location;
+        $job_post->country = $request->country;
+        $job_post->company_id = Auth::user()->id;
+        $job_post->save();
+
+        return redirect('jobpost')->with('success','JobPost Created');
     }
 
     /**
@@ -59,8 +87,15 @@ class JobpostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
-        //
+    {   
+        $job_post = Jobpost::findOrFail($id);
+
+        //validate
+        if(Auth::user()->id != $job_post->company_id){
+            return view('404');
+        }
+
+        return view('admin.jobpost.edit', compact('job_post'));
     }
 
     /**
@@ -72,7 +107,30 @@ class JobpostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'job_title' => 'required|string',
+            'job_description' => 'required|string',
+            'salary' => 'required|string',
+            'location' => 'required|string',
+            'country' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        //validation passed
+
+        $job_post = Jobpost::find($id);
+        $job_post->job_title = $request->job_title;
+        $job_post->job_description = $request->job_description;
+        $job_post->salary = $request->salary;
+        $job_post->location = $request->location;
+        $job_post->country = $request->country;
+        $job_post->company_id = Auth::user()->id;
+        $job_post->update();
+
+        return redirect('jobpost')->with('success','JobPost Updated');
     }
 
     /**
@@ -83,6 +141,8 @@ class JobpostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Jobpost::findOrFail($id)->delete();
+        
+        return redirect('jobpost')->with('success','JobPost Deleted');
     }
 }
