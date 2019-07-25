@@ -32,3 +32,4 @@ Route::resource('jobpost', 'JobpostController');
 
 Route::get('/profile', 'UserController@profile');
 Route::put('/user/{id}', 'UserController@update');
+Route::post('/user/apply-for-job', 'UserController@applyForJob');

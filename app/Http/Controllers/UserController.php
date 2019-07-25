@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\User;
 use Auth;
+use App\Application;
 
 class UserController extends Controller
 {
@@ -79,5 +80,29 @@ class UserController extends Controller
         $user->update();
 
         return redirect('/profile')->with('success','Profile Updated');
+    }
+
+    public function applyForJob(Request $request){
+
+    	// check if user has uploaded his resume
+    	if(is_null(Auth::user()->resume)){
+    		$response_code = 100;
+    		return response()->json([ 'response_code' => $response_code]);
+    	}
+
+    	// check if user has already applied for this job
+    	$count = Application::where('user_id',Auth::user()->id)->where('company_id',$request->id)->count();
+    	if($count > 0){
+    		$response_code = 101;
+    		return response()->json([ 'response_code' => $response_code]);
+    	}
+
+    	// store job application
+    	$application = new Application;
+    	$application->user_id = Auth::user()->id;
+    	$application->company_id =  $request->id;
+    	$application->save();
+    	$response_code = 102;
+    	return response()->json([ 'response_code' => $response_code]);
     }
 }

@@ -41,24 +41,46 @@
     $('.jobPost').delegate('.applyBtn', 'click', function (e) {
         e.preventDefault();
         var id = $(this).data('id');
-        Swal.fire({
-	      //position: 'top-end',
-	      type: 'success',
-	      title: 'Success',
-	      showConfirmButton: false,
-	      timer: 3000
-	    })
+        
         $.ajax({
             type : 'post',
-            url : '{{url("/sub-category-edit")}}',
-            data : { 'id': id },
-            success:function(data){
-                $('#sub_cata_id_1').val(data.id);
-                $('#cata_id_1').val(data.cata_id);
-                $('#sub_cata_name_1').val(data.name);
-                $('#sub_cata_details_1').val(data.description);
-                $('#save').val('Update');
-                $('#update_sub_category').modal('show');
+            url : '{{url("/user/apply-for-job")}}',
+            data : { 'id': id  },
+            success:function(response){
+            	if(response.response_code == 102){
+            		Swal.fire({
+				      //position: 'top-end',
+				      type: 'success',
+				      title: 'Success',
+				      showConfirmButton: false,
+				      timer: 3000
+				    })
+            	}
+            	else if(response.response_code == 101){
+            		Swal.fire({
+				      //position: 'top-end',
+				      type: 'info',
+				      title: 'You have already applied for this job.',
+				      showConfirmButton: false,
+				      timer: 3000
+				    })
+            	}
+            	else if(response.response_code == 100){
+            		Swal.fire({
+				      //position: 'top-end',
+				      type: 'error',
+				      title: 'Please upload your resume first, You will be redirected to your profile in a moment.',
+				      showConfirmButton: false,
+				      timer: 4000
+				    })
+            		var PROFILE_URL = "{{url('/profile')}}";
+
+            		setTimeout(function(){
+            			window.location.replace(PROFILE_URL)
+					},4000); 
+
+            	}
+                console.log(response)
             }
         });
     });
