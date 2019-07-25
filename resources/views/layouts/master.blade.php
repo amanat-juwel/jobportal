@@ -30,6 +30,7 @@
         @else
         <li class="{{ Request::is('profile') ? 'active' : '' }}"><a href="{{ url('/profile') }}">Profile</a></li>
         @endif
+        <li class=""><a href="{{ url('/admin') }}">Employers</a></li>
 
       </ul>
       <ul class="nav navbar-nav navbar-right">

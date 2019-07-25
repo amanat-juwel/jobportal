@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Admin;
-
 use App\Jobpost;
-
+use App\Application;
 use Auth;
 
 class AdminController extends Controller
@@ -16,6 +14,7 @@ class AdminController extends Controller
     {
         $this->middleware('auth:admin',['only' => 'index','edit']);
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -23,10 +22,15 @@ class AdminController extends Controller
      */
     public function index()
     {   
-        $job_posts = Jobpost::where('company_id', Auth::user()->id)->orderBy('id','desc')->get();
+        $applications = Application::with('user','jobpost')
+        ->join('jobposts','jobposts.id','=','applications.jobpost_id')
+        ->join('admins','admins.id','=','jobposts.company_id')
+        ->orderBy('applications.id','desc')
+        ->paginate();
 
-        return view('admin.dashboard',compact('job_posts'));
+        return view('admin.dashboard',compact('applications'));
     }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -36,6 +40,7 @@ class AdminController extends Controller
     {
         return view('admin.auth.register');
     }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -62,6 +67,7 @@ class AdminController extends Controller
         $admins->save();
         return redirect()->route('admin.auth.login');
     }
+
     /**
      * Display the specified resource.
      *
@@ -72,6 +78,7 @@ class AdminController extends Controller
     {
         //
     }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -82,6 +89,7 @@ class AdminController extends Controller
     {
         //
     }
+
     /**
      * Update the specified resource in storage.
      *
@@ -89,10 +97,12 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    
     public function update(Request $request, $id)
     {
         //
     }
+
     /**
      * Remove the specified resource from storage.
      *

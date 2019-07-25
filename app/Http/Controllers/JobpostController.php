@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Jobpost;
+use App\Application;
 use Auth;
 
 class JobpostController extends Controller
@@ -13,6 +14,7 @@ class JobpostController extends Controller
     {
         $this->middleware('auth:admin');
     }
+    
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +22,7 @@ class JobpostController extends Controller
      */
     public function index()
     {
-        $job_posts = Jobpost::orderBy('id')->get();
+        $job_posts = Jobpost::where('company_id',Auth::user()->id)->orderBy('id')->get();
 
         return view('admin.jobpost.index', compact('job_posts'));
     }
@@ -140,7 +142,14 @@ class JobpostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
+    {   
+        // validate
+        $count = Application::where('jobpost_id',$id)->count();
+        if($count > 0){
+            return redirect('jobpost')->with('danger','You can not delete this job at this moment.');
+        }
+
+        // validation passed
         Jobpost::findOrFail($id)->delete();
         
         return redirect('jobpost')->with('success','JobPost Deleted');

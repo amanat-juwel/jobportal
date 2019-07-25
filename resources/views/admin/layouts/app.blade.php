@@ -23,9 +23,12 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                @guest
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    Web
+                    Website
+                </a>
+                @guest
+                <a class="navbar-brand" href="{{ url('/admin/dashboard') }}">
+                    Employer Login
                 </a>
                 @else
                 <a class="navbar-brand" href="{{ url('/admin/dashboard') }}">
@@ -83,14 +86,28 @@
         </nav>
 
         <main class="py-4">
-            @if(Session::has('success'))
-                <div class="alert alert-success" id="success">
-                    {{Session::get('success')}}
-                    @php
-                    Session::forget('success');
-                    @endphp
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        @if(Session::has('success'))
+                            <div class="alert alert-success" id="success">
+                                {{Session::get('success')}}
+                                @php
+                                Session::forget('success');
+                                @endphp
+                            </div>
+                        @endif
+                        @if(Session::has('danger'))
+                            <div class="alert alert-danger" id="danger">
+                                {{Session::get('danger')}}
+                                @php
+                                Session::forget('danger');
+                                @endphp
+                            </div>
+                        @endif
+                    </div>
                 </div>
-            @endif
+            </div>
             @yield('content')
         </main>
     </div>

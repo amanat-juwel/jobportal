@@ -12,11 +12,19 @@
 */
 
 Route::get('/', 'SiteController@index');
-
-Auth::routes();
-
 Route::get('/home', 'HomeController@index')->name('home');
 
+/**
+ * User Routes
+ */
+Auth::routes();
+Route::get('/profile', 'UserController@profile');
+Route::put('/user/{id}', 'UserController@update');
+Route::post('/user/apply-for-job', 'UserController@applyForJob');
+
+/**
+ * Admin Routes
+ */
 Route::prefix('admin')->group(function () {
   Route::get('/', 'AdminController@index')->name('admin.dashboard');
   Route::get('dashboard', 'AdminController@index')->name('admin.dashboard');
@@ -26,10 +34,5 @@ Route::prefix('admin')->group(function () {
   Route::post('login', 'Auth\Admin\LoginController@loginAdmin')->name('admin.auth.loginAdmin');
   Route::post('logout', 'Auth\Admin\LoginController@logout')->name('admin.auth.logout');
 });
-
-
 Route::resource('jobpost', 'JobpostController');
 
-Route::get('/profile', 'UserController@profile');
-Route::put('/user/{id}', 'UserController@update');
-Route::post('/user/apply-for-job', 'UserController@applyForJob');

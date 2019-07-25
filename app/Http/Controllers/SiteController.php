@@ -14,7 +14,8 @@ class SiteController extends Controller
      */
     public function index()
     {	
-    	$job_posts = Jobpost::orderBy('id')->get();
+        //Eager Load
+    	$job_posts = Jobpost::with('company')->orderBy('id')->get();
 
         return view('welcome', compact('job_posts'));
     }

@@ -11,7 +11,7 @@
         <div class="panel panel-default">
          <div class="panel-heading">{{ $data->job_title }}</div>
           <div class="panel-body">
-            <p><i class="fa fa-institution"></i> {{ $data->job_title }}</p>
+            <p><i class="fa fa-institution"></i> {{ $data->company->business_name }}</p>
             <p><strong>Description:</strong> {{ $data->job_description }}</p>
             <p><i class="fa fa-money"></i> {{ $data->salary }}</p>
             <p><i class="fa fa-map-marker"></i> {{ $data->location }}, {{ $data->country }}</p>

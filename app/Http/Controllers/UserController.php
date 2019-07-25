@@ -33,6 +33,18 @@ class UserController extends Controller
     }
 
     /**
+     * Upload user file
+     *
+     * @return String
+     */
+    public function fileUpload($file,$upload_path){
+
+        $name = Auth::user()->first_name.'_'.Auth::user()->last_name.'_'.Auth::user()->id.'_'.$file->getClientOriginalName();
+        $file_url = $file->move($upload_path,$name);
+        return $file_url;
+    }
+    
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -63,18 +75,14 @@ class UserController extends Controller
 
         //upload user proPic & resume if exist
         if($request->file('profile_picture') != ""){
-	        $profile_picture = $request->file('profile_picture');
-	        $name = $user->first_name.'_'.$user->last_name.'_'.$user->id.'_'.$profile_picture->getClientOriginalName();
-	        $uploadPath = 'public/user/images/';
-	        $profile_picture_url = $profile_picture->move($uploadPath,$name);
-	        $user->profile_picture = $profile_picture_url;
+	        $file = $request->file('profile_picture');
+            $upload_path = 'public/user/images/';
+	        $user->profile_picture = $this->fileUpload($file,$upload_path);
         }
         if($request->file('resume') != ""){
-	        $resume = $request->file('resume');
-	        $name = $user->first_name.'_'.$user->last_name.'_'.$user->id.'_'.$resume->getClientOriginalName();
-	        $uploadPath = 'public/user/resume/';
-	        $resume_url = $resume->move($uploadPath,$name);
-	        $user->resume = $resume_url;
+	        $file = $request->file('resume');
+            $upload_path = 'public/user/resume/';
+	        $user->resume = $this->fileUpload($file,$upload_path);
         }
         
         $user->update();
@@ -100,7 +108,7 @@ class UserController extends Controller
     	// store job application
     	$application = new Application;
     	$application->user_id = Auth::user()->id;
-    	$application->company_id =  $request->id;
+    	$application->jobpost_id =  $request->id;
     	$application->save();
     	$response_code = 102;
     	return response()->json([ 'response_code' => $response_code]);
