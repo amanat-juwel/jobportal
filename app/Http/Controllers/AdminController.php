@@ -46,11 +46,11 @@ class AdminController extends Controller
     {
         // validate the data
         $this->validate($request, [
-          'first_name'          => 'required',
-          'last_name'          => 'required',
-          'business_name'          => 'required',
-          'email'         => 'required',
-          'password'      => 'required'
+          'first_name' => 'required', 'string', 'max:255',
+          'last_name' => 'required', 'string', 'max:255',
+          'business_name' => 'required | string',
+          'email'         => 'required | string | email | max:255 | unique:admins',
+          'password'      => 'required | string | min:6'
         ]);
         // store in the database
         $admins = new Admin;

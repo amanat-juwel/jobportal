@@ -23,14 +23,27 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home</a></li>
-        <li><a href="{{ url('user/profile/{id}') }}">Profile</a></li>
+        <li class="active"><a href="{{ url('/') }}">Home</a></li>
+        @guest
+        @else
+        <li><a href="">Profile</a></li>
+        @endif
+
       </ul>
       <ul class="nav navbar-nav navbar-right">
         @guest
-        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+        <li><a href="{{ route('login') }}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        <li><a href="{{ route('register') }}"><span class="glyphicon glyphicon-user"></span> Register</a></li>
         @else
-        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        <a class="dropdown-item" href="{{ route('logout') }}"
+             onclick="event.preventDefault();
+                           document.getElementById('logout-form').submit();">
+              {{ __('Logout') }}
+          </a>
+
+          <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+              @csrf
+          </form>
         @endguest
       </ul>
     </div>
@@ -38,31 +51,23 @@
 </nav>
   
 <div class="container">
-    <div class="jumbotron text-center">
-      <h1>My First Bootstrap Page</h1>
-      <p>Resize this responsive page to see the effect!</p> 
-    </div>
+  
 
     <div class="container">
       <div class="row">
         <div class="col-sm-12">
-            <h3>Latest Posts</h3> 
-          <div class="row">
-            <div class="col-sm-4">
-                <div class="panel panel-default">
-                 <div class="panel-heading">Panel Heading</div>
-                  <div class="panel-body">
-                    <p><i class="fa fa-institution"></i> Laravel LLC</p>
-                    <p><strong>Description:</strong> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
-                    <p><i class="fa fa-money"></i> Negotiable</p>
-                    <p><i class="fa fa-map-marker"></i> Dhaka, Bangladesh</p>
-                    <button class="btn btn-default brn-sm pull-right">Apply Now</button>
-                  </div>
+          @if(Session::has('success'))
+                <div class="alert alert-success" id="success">
+                    {{Session::get('success')}}
+                    @php
+                    Session::forget('success');
+                    @endphp
                 </div>
-            </div>
+            @endif
           </div>
         </div>
       </div>
+      @yield('content')
     </div>
 </div>
 

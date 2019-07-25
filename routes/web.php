@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'SiteController@index');
 
 Auth::routes();
 
@@ -31,3 +29,6 @@ Route::prefix('admin')->group(function () {
 
 
 Route::resource('jobpost', 'JobpostController');
+
+Route::get('/profile', 'UserController@profile');
+Route::put('/user/{id}', 'UserController@update');
