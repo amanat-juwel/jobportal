@@ -24,7 +24,7 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    Website
+                    JobPortal
                 </a>
                 @guest
                 <a class="navbar-brand" href="{{ url('/admin/dashboard') }}">

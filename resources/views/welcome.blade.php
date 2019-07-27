@@ -15,9 +15,7 @@
             <p><strong>Description:</strong> {{ $data->job_description }}</p>
             <p><i class="fa fa-money"></i> {{ $data->salary }}</p>
             <p><i class="fa fa-map-marker"></i> {{ $data->location }}, {{ $data->country }}</p>
-			@if(Auth::user()!=null)
             <button class="applyBtn btn btn-default brn-sm pull-right" data-id="{{ $data->id }}">Apply Now</button>
-			@endif
           </div>
         </div>
     </div>
@@ -41,7 +39,19 @@
     $('.jobPost').delegate('.applyBtn', 'click', function (e) {
         e.preventDefault();
         var id = $(this).data('id');
-        
+        var logged_in = @if(Auth::user()!=null) 1 @else 0 @endif;
+
+        if(!logged_in){
+            Swal.fire({
+              //position: 'top-end',
+              type: 'error',
+              title: 'Please login to apply for this post.',
+              showConfirmButton: false,
+              timer: 4000
+            })
+            return false;
+        }
+
         $.ajax({
             type : 'post',
             url : '{{url("/user/apply-for-job")}}',

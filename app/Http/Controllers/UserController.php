@@ -99,7 +99,7 @@ class UserController extends Controller
     	}
 
     	// check if user has already applied for this job
-    	$count = Application::where('user_id',Auth::user()->id)->where('company_id',$request->id)->count();
+    	$count = Application::where('user_id',Auth::user()->id)->where('jobpost_id',$request->id)->count();
     	if($count > 0){
     		$response_code = 101;
     		return response()->json([ 'response_code' => $response_code]);

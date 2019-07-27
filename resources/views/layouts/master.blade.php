@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Laravel</title>
+  <title>JobPortal</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
@@ -21,7 +21,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>                        
       </button>
-      <a class="navbar-brand" href="{{ url('/') }}">JobListing</a>
+      <a class="navbar-brand" href="{{ url('/') }}">JobPortal</a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
@@ -38,15 +38,16 @@
         <li class="{{ Request::is('login') ? 'active' : '' }}"><a href="{{ route('login') }}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
         <li class="{{ Request::is('register') ? 'active' : '' }}"><a href="{{ route('register') }}"><span class="glyphicon glyphicon-user"></span> Register</a></li>
         @else
-        <a class="dropdown-item" href="{{ route('logout') }}"
+        <li>
+          <a class="dropdown-item" href="{{ route('logout') }}"
              onclick="event.preventDefault();
                            document.getElementById('logout-form').submit();">
               {{ __('Logout') }}
           </a>
-
           <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
               @csrf
           </form>
+        </li>
         @endguest
       </ul>
     </div>
